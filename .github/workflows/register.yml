@@ -1,0 +1,57 @@
+# You have to set PAT and add secrete ACCESS_OKREGISTRY in the repo {{{PKG}}}
+# see also the default template: https://github.com/JuliaCI/PkgTemplates.jl/blob/master/templates/github/workflows/register.yml
+# Also see [Running GitHub Actions Sequentially](https://stevenmortimer.com/running-github-actions-sequentially/) to separate updateokreg out from CI.yml, and trigger TagBot sequentially.
+# CHECKPOINT: Currently substitution (e.g., {{{PKG}}}) failed.
+
+name: Register Package to OkRegistry
+on:
+  push:
+    paths:
+      - 'Project.toml'
+    branches:
+      - main
+      - master
+  issue_comment:
+    types:
+      - created
+  workflow_dispatch:
+jobs:
+  UpdateOkReg:
+    # if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: 1.6.7
+      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+        with:
+          path: TEMP
+      - uses: actions/checkout@v3 # see https://github.com/actions/checkout
+        with:
+          repository: okatsn/OkRegistry
+          path: OkRegistry
+          token: ${{ secrets.ACCESS_OKREGISTRY }}
+    # actions/checkout clones repo
+      - run: |
+          cd OkRegistry
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions"
+          julia --project=@. -e '
+            using Pkg;
+            Pkg.instantiate();
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"));
+            include("add_local_pkg_to_registry.jl");
+            '
+    # Update OkRegistry first.
+    # 1. Current path is critical. Please refer to "add_local_pkg_to_registry.jl" in OkRegistry.
+    # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
+    # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
+      - name: Trigger next workflow
+        if: success()
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: ${{ github.repository }}
+          event-type: trigger-tagbot
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
+          # token: ${{ secrets.REPO_GHA_PAT }} #default is GITHUB_TOKEN
