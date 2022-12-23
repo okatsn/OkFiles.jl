@@ -35,12 +35,7 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
-      - run: |
-          julia --project=@. -e '
-            using Pkg;
-            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
-            '
-      # TODO: create a github action for adding OkRegistry
+      - uses: okatsn/add-registry@v1
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
@@ -57,12 +52,7 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - run: |
-          julia --project=@. -e '
-            using Pkg;
-            Pkg.Registry.add(RegistrySpec(url = "https://github.com/okatsn/OkRegistry.git"))
-            '
-      # TODO: create a github action for adding OkRegistry
+      - uses: okatsn/add-registry@v1
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
         env:
