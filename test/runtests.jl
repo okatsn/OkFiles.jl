@@ -36,6 +36,12 @@ using Documenter
 
     doctest(OkFiles; manual = false) # this makes jldoctest also be tested in a local test
 end
+
+using CompatHelperLocal
+@testset "CompatHelperLocal" begin
+    @test true
+    TF = CompatHelperLocal.@check() # This raise warning only.
+end
 # @testitem "test vscode testitem" begin
 #     println("Only `@testitem` block will be detectable by vscode's test")
 #     @test true

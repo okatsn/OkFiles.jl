@@ -3,14 +3,13 @@ uuid = "b25a35d4-863d-483c-9fa1-95480bd075d2"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
 version = "0.1.1"
 
-[deps]
-Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-
 [compat]
 julia = "1.6"
 
 [extras]
+CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Test", "Documenter", "CompatHelperLocal"]
