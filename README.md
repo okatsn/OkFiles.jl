@@ -74,7 +74,7 @@ In which,
     ```@autodocs
     Modules = [SWCForecast]
     Order   = [:function, :type]
-    using FileTools, SWCForecast
+    using OkFiles, SWCForecast
     Pages = filelist(r".+\.jl", joinpath(dirname(pathof(SWCForecast)),"mymodels"); join=false)
     # which might be `Pages = [model2.jl, model2a.jl]` in the directory "mymodels", for example
     ```
