@@ -1,4 +1,4 @@
-@testset "mv2cp.jl" begin
+@testset "mv2cp.jl and pathnorepeat.jl" begin
     using RDatasets,CSV
     iris = RDatasets.dataset("datasets", "iris")
 
@@ -18,6 +18,8 @@
     @test !isfile(srcfile)
     @test isfile(targetfile)
     @test basename(targetfile) == basename(srcfile)
+
+    @test pathnorepeat(targetfile) == joinpath(targetdir, "iris$(OkFiles.serial_number_4d(1)).csv")
 
     @test isequal(CSV.read(targetfile,DataFrame), iris)
     rm(targetfile)

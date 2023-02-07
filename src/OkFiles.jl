@@ -16,4 +16,8 @@ include("datalist.jl")
 
 include("mvcp.jl")
 export mv2dir
+
+using Printf
+include("pathnorepeat.jl")
+export pathnorepeat
 end

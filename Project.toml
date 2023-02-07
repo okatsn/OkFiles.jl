@@ -1,15 +1,20 @@
 name = "OkFiles"
 uuid = "b25a35d4-863d-483c-9fa1-95480bd075d2"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.2.1"
+version = "0.3.0"
+
+[deps]
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [compat]
 julia = "1.6"
 
 [extras]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CompatHelperLocal = "5224ae11-6099-4aaa-941d-3aab004bd678"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+RDatasets = "ce6b1742-4840-55fa-b093-852dadbb1d8b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test", "Documenter", "CompatHelperLocal"]
+test = ["Test", "Documenter", "CompatHelperLocal", "RDatasets", "CSV"]
