@@ -60,7 +60,7 @@ end
     # targetdir NOT created first
 
     ## Test srcfile1
-    targetfile = mv2dir(srcfile, targetdir, OkFiles.mkdirway)
+    targetfile = mv2dir(OkFiles.mkdirway, srcfile, targetdir)
 
     @test !isfile(srcfile)
     @test isfile(targetfile)
@@ -72,7 +72,7 @@ end
     @test isequal(CSV.read(targetfile,DataFrame), iris)
 
     ## Test srcfile2
-    targetfile1 = mv2dir(srcfile1, targetdir, OkFiles.mkdirway)
+    targetfile1 = mv2dir(OkFiles.mkdirway, srcfile1, targetdir)
 
     @test !isfile(srcfile1)
     @test isfile(targetfile1)
@@ -120,7 +120,7 @@ end
 
 
     ## Test move a directory to another directory
-    targetdir = mv2dir(srcdir, joinpath("another","world"), OkFiles.mkdirway; force=true)
+    targetdir = mv2dir(OkFiles.mkdirway, srcdir, joinpath("another","world"); force=true)
     @test isdir(targetdir)
     @test !isfile(srcfile1)
     targetfile1 = joinpath("another", "world", "hello", "world", "iris.csv")
@@ -170,7 +170,7 @@ end
     ## Test move a directory to another directory
     # Move "hello/world/*" to another/
     srcdir = joinpath("hello", "world")
-    targetdir = mv2dir(srcdir, joinpath("another"), OkFiles.pathnorepeat)
+    targetdir = mv2dir(OkFiles.pathnorepeat, srcdir, joinpath("another"))
     @test isdir(targetdir)
     @test !isfile(srcfile1)
     # "another/world" exists, "pathnorepeat" produce "another/world_0001"
@@ -181,7 +181,7 @@ end
     @test targetdir == joinpath("another", "world_0001")
     @test basename(targetfile_0001) == basename(srcfile1)
 
-    newpath = mv2dir(targetfile1, targetdir, OkFiles.pathnorepeat)
+    newpath = mv2dir(OkFiles.pathnorepeat, targetfile1, targetdir)
     @test !isfile(targetfile1)
     @test isfile(joinpath(targetdir, "iris_0001.csv"))
     @test newpath == joinpath(targetdir, "iris_0001.csv")
