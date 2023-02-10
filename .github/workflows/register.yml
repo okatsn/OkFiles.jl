@@ -60,11 +60,15 @@ jobs:
     # 2. `git config` is required, and has to be done in repo OkRegistry (cd OkRegistry must precede)
     # 3. Personal registry is add per julia install; that is, OkRegistry should be added before `Pkg.instantiate()`
       - name: Trigger next workflow
-        if: success()
-        uses: peter-evans/repository-dispatch@v2
+        if: success() && github.event_name == 'push' # KEYNOTE: must have this condition if `github.event.commits` is used in the followings. `github.event.commits` is only available in [push webhook payload](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push).
+        # if: success() # Use this condition instead if `github.event.commits` is not applied herein after AND you want trigger-tagbot dispatch workflows `on` events other that `push`.
+        uses: peter-evans/repository-dispatch@v2 # See https://github.com/peter-evans/repository-dispatch
         with:
           repository: ${{ github.repository }}
           event-type: trigger-tagbot
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}' # `client-payload:` passes data from Workflow 1 to Workflow 2
-          # token: ${{ secrets.REPO_GHA_PAT }} #default is GITHUB_TOKEN
+          token: ${{ secrets.GITHUB_TOKEN }} # default is GITHUB_TOKEN
+          client-payload: '{"commit_msg": "${{ github.event.commits[0].message }}"}'
+          # Delete this client-payload line and `client_payload` lines in `TagBot.yml` if you don't want commit message appears.
+          # Push everything else before you push `Project.toml` with version number raised and commit it solely with commit message that will also appear as part of the release notes.
+          # Also see OkPkgTemplates.PLUGIN_REGISTER() for explanation.
+          # Noted that multiline string (for commit message) is not acceptable for json. See PLUGIN_REGISTER for more info.

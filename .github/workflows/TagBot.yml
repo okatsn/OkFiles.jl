@@ -9,9 +9,46 @@ on:
     types:
       - created
   workflow_dispatch:
+
+## Allow permissions may fix some error; also see register.yml
+## - see [Tagbot-setup](https://github.com/JuliaRegistries/TagBot#setup)
+permissions:
+  contents: write
+
 jobs:
   TagBot:
-    # if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
+    if: github.event_name == 'repository_dispatch' # Add this condition if `github.event.client_payload` is applied in the followings  to guarantee client_payload exists. Check also `PLUGIN_TAGBOT()` and register.yml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JuliaRegistries/TagBot@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ssh: ${{ secrets.DOCUMENTER_KEY }}
+          changelog: |
+            ## {{ package }} {{ version }}
+            ${{ github.event.client_payload.commit_msg }}
+            {% if previous_release %}
+            [Diff since {{ previous_release }}]({{ compare_url }})
+            {% endif %}
+            {% if custom %}
+            {{ custom }}
+            {% endif %}
+            {% if issues %}
+            **Closed issues:**
+            {% for issue in issues %}
+            - {{ issue.title }} (#{{ issue.number }})
+            {% endfor %}
+            {% endif %}
+            {% if pulls %}
+            **Merged pull requests:**
+            {% for pull in pulls %}
+            - {{ pull.title }} (#{{ pull.number }}) (@{{ pull.author.username }})
+            {% endfor %}
+            {% endif %}
+
+          registry: okatsn/OkRegistry
+  TagBotOriginal:
+    if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
     runs-on: ubuntu-latest
     steps:
       - uses: JuliaRegistries/TagBot@v1
