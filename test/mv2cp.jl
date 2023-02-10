@@ -56,7 +56,7 @@ end
     targetdir = joinpath("data", "foo", "bar")
     # targetdir NOT created first
 
-    targetfile = mv2dir(srcfile, targetdir; mkpath=true)
+    targetfile = mv2dir(srcfile, targetdir, OkFiles.mkdirway)
 
     @test !isfile(srcfile)
     @test isfile(targetfile)
