@@ -26,7 +26,7 @@ jobs:
           ssh: ${{ secrets.DOCUMENTER_KEY }}
           changelog: |
             ## {{ package }} {{ version }}
-            ${{ github.event.client_payload.commit_msg }}
+            ${{ github.event.client_payload.logfile_msg }}
             {% if previous_release %}
             [Diff since {{ previous_release }}]({{ compare_url }})
             {% endif %}
@@ -47,7 +47,7 @@ jobs:
             {% endif %}
 
           registry: okatsn/OkRegistry
-  TagBotOriginal:
+  TagBotNoChangelog: # KEYNOTE: Manually run this to tag previous versions
     if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
     runs-on: ubuntu-latest
     steps:

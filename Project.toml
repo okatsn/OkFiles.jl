@@ -1,10 +1,9 @@
 name = "OkFiles"
 uuid = "b25a35d4-863d-483c-9fa1-95480bd075d2"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.4.0"
+version = "0.4.1"
 
 [deps]
-OkPkgTemplates = "38290ba8-8fbe-457b-bf75-0e4980da3840"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [compat]
