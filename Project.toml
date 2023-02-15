@@ -8,6 +8,7 @@ OkPkgTemplates = "38290ba8-8fbe-457b-bf75-0e4980da3840"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [compat]
+OkPkgTemplates = "0.4"
 julia = "1.6"
 
 [extras]
