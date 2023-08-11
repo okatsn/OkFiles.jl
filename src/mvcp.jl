@@ -4,7 +4,7 @@ mkdirway_brief = "`mkdirway(newpath)` makes directories along the way to the fil
 """
 $mkdirway_brief.
 If `newpath` is a directory, directories will be made up to its parent (i.e., `dirname(newpath)`).
-This behavior is intended for `mv(dir0, dir1)` with out `force=true`, that `dir1` should not be created first.
+This behavior is intended for `mv(dir0, dir1)` without `force=true`, that `dir1` should not be created first.
 
 `mkdirway(newpath)` just returns `newpath` without any modification on it.
 """
