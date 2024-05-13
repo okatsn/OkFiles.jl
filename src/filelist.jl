@@ -1,10 +1,24 @@
 """
+`readdir` of  `FilePathsBase` and `SFTPClient` have different interface.
+`okreaddir(dir; kwargs...) = readdir(dir; kwargs...)` is for the common interface of the `readdir` of `FilePathsBase`.
+"""
+okreaddir(dir; kwargs...) = readdir(dir; kwargs...)
+
+"""
+This function is intended that must follow `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` of the `SFTPClient` interface.
+"""
+okreaddir(dir::SFTPClient.SFTP; join = false, sort = true) = readdir(dir, join, sort)
+
+
+
+"""
 `filelist(dir; kwargs...)` return the list of files. For its keyword arguments, see `readdir`.
 """
 function filelist(dir; readdirkwargs...)
-    fs = readdir(dir; readdirkwargs...) # files and directories
+    fs = okreaddir(dir; readdirkwargs...) # files and directories
     return fs[isfile.(fs)]
 end
+
 
 """
 `filelist(; kwargs...)` returns the paths for all the files in the current directory.
