@@ -13,9 +13,22 @@ Similar to `filelist`, `filelistall(expr::Regex, dir)` returns files whose name 
 """
 function filelistall(expr::Regex, dir)
     allpaths = filelistall(dir)
+    return selectpath(expr, allpaths)
+end
+
+
+function filelistall(expr::Regex, sftp::SFTPClient.SFTP, vararg...)
+    allpaths = filelistall(sftp, vararg...)
+    return selectpath(expr, allpaths)
+end
+
+
+function selectpath(expr, allpaths)
     desired_ind = occursin.(expr, basename.(allpaths))
     return allpaths[desired_ind]
 end
+
+
 
 """
 
@@ -26,7 +39,7 @@ SFTPClient.download.(sftp, fpath, downloadDir="") # download the entire folder o
 """
 function filelistall(sftp::SFTPClient.SFTP, vararg...)
     allpaths = String[]
-    subdir = only(vararg)
+    subdir = sftpvararginterface(vararg)
     wd = SFTPClient.walkdir(sftp, subdir)
     iteratedirwalked!(wd, allpaths)
     return allpaths
