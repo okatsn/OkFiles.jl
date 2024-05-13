@@ -1,9 +1,16 @@
 """
-`filelist(dir; kwargs...)` return the list of files. For its keyword arguments, see `readdir`.
+`filelist(dir; join=true, sort=true)` return the list of files. For its keyword arguments, see `readdir`.
 """
-function filelist(dir; readdirkwargs...)
-    fs = readdir(dir; readdirkwargs...) # files and directories
-    return fs[isfile.(fs)]
+function filelist(dir; join=true, sort=true)
+    fs = readdir(dir; join=true, sort=sort) # files and directories
+    if join # == true
+        return fs[isfile.(fs)]
+    else
+        return basename.(fs[isfile.(joinpath.(dir,fs))])
+    end
+    # KEYNOTE: Why not just pass kwargs to readdir (why we cannot have a `filelist(dir; kwargs...)`)?
+    # The reason why this step is seemingly redundant is:
+    # - The `readdir` in this function MUST called with `join=true`, for the later use of `isfile`.
 end
 
 """
@@ -31,6 +38,7 @@ end
 
 """
 `filelist(; kwargs...)` returns the paths for all the files in the current directory.
+`kwargs` those forwarded to the method of `filelist(dir; kwargs...)`.
 """
 function filelist(;opts...)
     filelist(pwd(); opts...)
@@ -38,6 +46,7 @@ end
 
 """
 `filelist(expr::Regex, dir; kwargs...)` returns a vector of paths where the file matches `expr`.
+`kwargs` those forwarded to the method of `filelist(dir; kwargs...)`.
 """
 function filelist(expr::Regex, dir; opts...)
     fs = filelist(dir; opts...)
