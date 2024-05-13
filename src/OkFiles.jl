@@ -1,7 +1,7 @@
 module OkFiles
 
 # Write your package code here.
-
+import SFTPClient
 include("filelist.jl")
 export filelist
 
