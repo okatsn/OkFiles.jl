@@ -1,7 +1,6 @@
 module OkFiles
 
 # Write your package code here.
-import SFTPClient: readdir
 import SFTPClient
 include("filelist.jl")
 export filelist

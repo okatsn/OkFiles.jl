@@ -7,14 +7,25 @@ function filelist(dir; readdirkwargs...)
 end
 
 """
-`filelist(dir::SFTPClient.SFTP; join = false, sort = true)` returns the file list for the SFTP directory.
+`filelist(dir::SFTPClient.SFTP [, subdir])` returns the file list for the SFTP directory.
 This function utilize `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` of `SFTPClient`.
+
+This function currently do no support `join` and `sort` argument, because
+it rely on `sftpstat` to check whether a path is a file, but `sftpstat` always returns unsorted and
+not-joined results.
 """
-function filelist(dir::SFTPClient.SFTP; join = false, sort = true)
-    # KEYNOTE: Must Keep the interface consistent with that of
-    # `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` (using SFTPClient)
-    fs = readdir(dir, join, sort) # `readdir` of  `FilePathsBase` and `SFTPClient` have different interface, and this is why I define two `filelist`
-    return fs[isfile.(fs)]
+function filelist(sftp::SFTPClient.SFTP, vararg...)
+    # The interface of `readdir` of  `FilePathsBase` is different from that of `SFTPClient`.
+    # The output of `SFTPClient`'s `readdir` have a slightly different (`readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)`)
+    # interface (`join`, `sort` are positional arguments), and `isfile` do not work for its output.
+    # For these reasons, this is why a specialized `filelist` is required for reading SFTP files.
+
+    # fs = SFTPClient.readdir(sftp, join, sort)
+    subdir = only(vararg)
+    stat = SFTPClient.sftpstat(sftp, subdir)
+    everything = getproperty.(stat, :desc)
+    whichisfile = stat .|> SFTPClient.isfile
+    return everything[whichisfile]
 end
 
 
