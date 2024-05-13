@@ -1,21 +1,19 @@
 """
-`readdir` of  `FilePathsBase` and `SFTPClient` have different interface.
-`okreaddir(dir; kwargs...) = readdir(dir; kwargs...)` is for the common interface of the `readdir` of `FilePathsBase`.
-"""
-okreaddir(dir; kwargs...) = readdir(dir; kwargs...)
-
-"""
-This function is intended that must follow `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` of the `SFTPClient` interface.
-"""
-okreaddir(dir::SFTPClient.SFTP; join = false, sort = true) = readdir(dir, join, sort)
-
-
-
-"""
 `filelist(dir; kwargs...)` return the list of files. For its keyword arguments, see `readdir`.
 """
 function filelist(dir; readdirkwargs...)
-    fs = okreaddir(dir; readdirkwargs...) # files and directories
+    fs = readdir(dir; readdirkwargs...) # files and directories
+    return fs[isfile.(fs)]
+end
+
+"""
+`filelist(dir::SFTPClient.SFTP; join = false, sort = true)` returns the file list for the SFTP directory.
+This function utilize `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` of `SFTPClient`.
+"""
+function filelist(dir::SFTPClient.SFTP; join = false, sort = true)
+    # KEYNOTE: Must Keep the interface consistent with that of
+    # `Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)` (using SFTPClient)
+    fs = readdir(dir, join, sort) # `readdir` of  `FilePathsBase` and `SFTPClient` have different interface, and this is why I define two `filelist`
     return fs[isfile.(fs)]
 end
 
