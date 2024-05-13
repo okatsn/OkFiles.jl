@@ -1,13 +1,9 @@
 """
 `filelist(dir; join=true, sort=true)` return the list of files. For its keyword arguments, see `readdir`.
 """
-function filelist(dir; join=true, sort=true)
-    fs = readdir(dir; join=true, sort=sort) # files and directories
-    if join # == true
-        return fs[isfile.(fs)]
-    else
-        return basename.(fs[isfile.(joinpath.(dir,fs))])
-    end
+function filelist(dir; readdirkwargs...)
+    fs = readdir(dir; readdirkwargs...) # files and directories
+    return fs[isfile.(fs)]
 end
 
 """
