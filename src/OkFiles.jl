@@ -1,7 +1,11 @@
 module OkFiles
 
+#
+
 # Write your package code here.
 import SFTPClient
+include("sftpvararginterface.jl")
+
 include("filelist.jl")
 export filelist
 
