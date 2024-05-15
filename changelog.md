@@ -20,3 +20,6 @@ New features
 
 Others
 - Update CIs
+
+## v0.5.0
+- `filelist` and `filelistall` for `sftp::SFTPClient.SFTP`.
