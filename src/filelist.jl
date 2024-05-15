@@ -28,7 +28,7 @@ function filelist(sftp::SFTPClient.SFTP, vararg...)
     # For these reasons, this is why a specialized `filelist` is required for reading SFTP files.
 
     # fs = SFTPClient.readdir(sftp, join, sort)
-    subdir = only(vararg)
+    subdir = sftpvararginterface(vararg)
     stat = SFTPClient.sftpstat(sftp, subdir)
     everything = getproperty.(stat, :desc)
     whichisfile = stat .|> SFTPClient.isfile
