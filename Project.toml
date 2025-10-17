@@ -1,14 +1,14 @@
 name = "OkFiles"
 uuid = "b25a35d4-863d-483c-9fa1-95480bd075d2"
 authors = ["okatsn <okatsn@gmail.com> and contributors"]
-version = "0.5.0"
+version = "0.5.1"
 
 [deps]
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 SFTPClient = "6f0ef2a9-1531-47bc-8c87-f4ce50005508"
 
 [compat]
-SFTPClient = "0.4.3"
+SFTPClient = "0.4"
 julia = "1.6"
 
 [extras]
